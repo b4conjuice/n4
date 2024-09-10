@@ -1,10 +1,10 @@
 import type { Viewport } from 'next'
+import { TRPCReactProvider } from '@/trpc/react'
+import { ClerkProvider } from '@clerk/nextjs'
 
 import '@/styles/globals.css'
 
 const DEFAULT_TITLE = 'n4'
-
-import { TRPCReactProvider } from '@/trpc/react'
 
 export const metadata = {
   manifest: '/manifest.json',
@@ -27,14 +27,16 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang='en'>
-      <body>
-        <TRPCReactProvider>
-          <div className='bg-cb-dark-blue text-cb-white flex min-h-screen flex-col'>
-            {children}
-          </div>
-        </TRPCReactProvider>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang='en'>
+        <body>
+          <TRPCReactProvider>
+            <div className='flex min-h-screen flex-col bg-cb-dark-blue text-cb-white'>
+              {children}
+            </div>
+          </TRPCReactProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   )
 }
