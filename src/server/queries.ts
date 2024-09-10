@@ -39,6 +39,7 @@ export async function getNotes() {
 
   const notes = await db.query.notes.findMany({
     where: (model, { eq }) => eq(model.author, user.userId),
+    orderBy: (model, { desc }) => desc(model.updatedAt),
   })
   return notes
 }
