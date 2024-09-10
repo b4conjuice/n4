@@ -1,27 +1,22 @@
-'use client'
+import { Main } from '@/components/ui'
+import { getNoteById } from '@/server/queries'
 
-import { Main, Title } from '@/components/ui'
-import { api } from '@/trpc/react'
-
-const TEST_PODCAST_EPISODE_ID = 1000668311628
-
-export default function Note() {
-  const { data: note } = api.note.get.useQuery({
-    podcastEpisodeId: TEST_PODCAST_EPISODE_ID,
-  })
-  if (!note)
+export default async function Note({ params }: { params: { id: string } }) {
+  const note = await getNoteById(Number(params.id))
+  if (!note) {
     return (
-      <Main className='flex flex-col p-4'>
-        <div className='flex flex-grow flex-col items-center justify-center space-y-4'>
-          loading
+      <Main className='flex flex-col px-4 pb-4'>
+        <div className='flex flex-grow flex-col space-y-4'>
+          <p>note does not exist</p>
         </div>
       </Main>
     )
+  }
   const { title } = note
   return (
-    <Main className='flex flex-col p-4'>
-      <div className='flex flex-grow flex-col items-center justify-center space-y-4'>
-        <Title>{title}</Title>
+    <Main className='flex flex-col px-4 pb-4'>
+      <div className='flex flex-grow flex-col space-y-4'>
+        <h2>{title}</h2>
       </div>
     </Main>
   )

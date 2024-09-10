@@ -58,6 +58,18 @@ export async function getNote(podcastEpisodeId: number) {
 
   return note
 }
+export async function getNoteById(id: number) {
+  const user = auth()
+
+  if (!user.userId) throw new Error('unauthorized')
+
+  const note = await db.query.notes.findFirst({
+    where: (model, { eq }) =>
+      and(eq(model.id, id), eq(model.author, user.userId)),
+  })
+
+  return note
+}
 
 export async function deleteNote(id: number, currentPath = '/') {
   const user = auth()
