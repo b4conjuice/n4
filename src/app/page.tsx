@@ -1,8 +1,9 @@
+import Link from 'next/link'
 import { SignedIn, SignedOut } from '@clerk/nextjs'
 
+import TopNav from './_components/topNav'
 import { Main } from '@/components/ui'
 import { getNotes } from '@/server/queries'
-import Link from 'next/link'
 
 async function Notes() {
   const notes = await getNotes()
@@ -25,15 +26,18 @@ async function Notes() {
 
 export default function Home() {
   return (
-    <Main className='flex flex-col px-4 pb-4'>
-      <div className='flex flex-grow flex-col space-y-4'>
-        <SignedIn>
-          <Notes />
-        </SignedIn>
-        <SignedOut>
-          <p>sign in to view your notes</p>
-        </SignedOut>
-      </div>
-    </Main>
+    <>
+      <TopNav />
+      <Main className='flex flex-col px-4 pb-4'>
+        <div className='flex flex-grow flex-col space-y-4'>
+          <SignedIn>
+            <Notes />
+          </SignedIn>
+          <SignedOut>
+            <p>sign in to view your notes</p>
+          </SignedOut>
+        </div>
+      </Main>
+    </>
   )
 }

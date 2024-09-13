@@ -3,7 +3,6 @@ import { TRPCReactProvider } from '@/trpc/react'
 import { ClerkProvider } from '@clerk/nextjs'
 
 import '@/styles/globals.css'
-import TopNav from './_components/topNav'
 
 const DEFAULT_TITLE = 'n4'
 
@@ -33,7 +32,6 @@ export default function RootLayout({
         <body>
           <TRPCReactProvider>
             <div className='flex min-h-screen flex-col bg-cb-dark-blue text-cb-white'>
-              <TopNav />
               {children}
             </div>
           </TRPCReactProvider>
