@@ -13,11 +13,5 @@ export default async function NotePage({ params }: { params: { id: string } }) {
       </Main>
     )
   }
-  return (
-    <Main className='flex flex-col p-4'>
-      <div className='flex flex-grow flex-col space-y-4'>
-        <Note note={note} />
-      </div>
-    </Main>
-  )
+  return <Note note={note} />
 }
