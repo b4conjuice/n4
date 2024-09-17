@@ -7,6 +7,7 @@ import useLocalStorage from '@/lib/useLocalStorage'
 import { type Note } from '@/lib/types'
 import { Footer, Main } from '@/components/ui'
 import { FooterListItem } from '@/components/ui/footer'
+import { saveNote } from '@/server/queries'
 
 export default function NoteComponent({ note }: { note: Note }) {
   const { text: initialText } = note
@@ -275,8 +276,16 @@ export default function NoteComponent({ note }: { note: Note }) {
             </FooterListItem> */}
             {!readOnly && (
               <FooterListItem
-                onClick={() => {
-                  // TODO: save note
+                onClick={async () => {
+                  const [title, ...body] = text.split('\n\n')
+                  const newNote = {
+                    ...note,
+                    id: note.id,
+                    text,
+                    title: title ?? '',
+                    body: body.join('\n\n'),
+                  }
+                  await saveNote(newNote)
                 }}
                 disabled={!canSave}
               >
