@@ -1,9 +1,9 @@
 import { Main } from '@/components/ui'
-import { getNoteById } from '@/server/queries'
+import { getNote } from '@/server/queries'
 import Note from './note'
 
 export default async function NotePage({ params }: { params: { id: string } }) {
-  const note = await getNoteById(Number(params.id))
+  const note = await getNote(Number(params.id))
   if (!note) {
     return (
       <Main className='flex flex-col px-4 pb-4'>

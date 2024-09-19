@@ -44,22 +44,7 @@ export async function getNotes() {
   return notes
 }
 
-export async function getNote(podcastEpisodeId: number) {
-  const user = auth()
-
-  if (!user.userId) throw new Error('unauthorized')
-
-  const note = await db.query.notes.findFirst({
-    where: (model, { eq }) =>
-      and(
-        eq(model.podcastEpisodeId, podcastEpisodeId),
-        eq(model.author, user.userId)
-      ),
-  })
-
-  return note
-}
-export async function getNoteById(id: number) {
+export async function getNote(id: number) {
   const user = auth()
 
   if (!user.userId) throw new Error('unauthorized')
