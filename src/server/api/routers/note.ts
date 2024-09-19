@@ -1,8 +1,6 @@
 import { z } from 'zod'
 
 import { createTRPCRouter, publicProcedure } from '@/server/api/trpc'
-// import { notes } from '@/server/db/schema'
-import { and } from 'drizzle-orm'
 
 export const noteRouter = createTRPCRouter({
   hello: publicProcedure
@@ -11,18 +9,6 @@ export const noteRouter = createTRPCRouter({
       return {
         greeting: `Hello ${input.text}`,
       }
-    }),
-  get: publicProcedure
-    .input(z.object({ podcastEpisodeId: z.number() }))
-    .query(async ({ ctx, input }) => {
-      const note = await ctx.db.query.notes.findFirst({
-        where: (model, { eq }) =>
-          and(
-            eq(model.podcastEpisodeId, input.podcastEpisodeId)
-            // eq(model.author, user.userId) // TODO
-          ),
-      })
-      return note ?? null
     }),
 
   // TODO
