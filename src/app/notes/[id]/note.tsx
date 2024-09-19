@@ -1,21 +1,35 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { ArrowDownOnSquareIcon, Bars2Icon } from '@heroicons/react/20/solid'
+import { useRouter } from 'next/navigation'
+import {
+  ArrowDownOnSquareIcon,
+  Bars2Icon,
+  TrashIcon,
+  WrenchIcon,
+  XMarkIcon,
+} from '@heroicons/react/20/solid'
 
 import useLocalStorage from '@/lib/useLocalStorage'
 import { type Note } from '@/lib/types'
 import { Footer, Main } from '@/components/ui'
 import { FooterListItem } from '@/components/ui/footer'
 import { saveNote } from '@/server/queries'
+import { api } from '@/trpc/react'
+
+type FooterType = 'default' | 'tools' | 'share'
 
 export default function NoteComponent({ note }: { note: Note }) {
+  const router = useRouter()
   const { text: initialText } = note
   const [text, setText] = useState(initialText)
+  const [footerType, setFooterType] = useState<FooterType>('default')
   const [isFullScreen, setIsFullScreen] = useState(false)
   const [currentSelectionStart, setCurrentSelectionStart] = useState(0)
   const [currentSelectionEnd, setCurrentSelectionEnd] = useState(0)
   const [commandKey, setCommandKey] = useLocalStorage('n4-commandKey', '!')
+
+  const { mutate: deleteNote } = api.note.delete.useMutation()
 
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
   useEffect(() => {
@@ -259,7 +273,35 @@ export default function NoteComponent({ note }: { note: Note }) {
         </div>
       </Main>
       <Footer>
-        {
+        {footerType === 'tools' ? (
+          <>
+            <FooterListItem onClick={() => setFooterType('default')}>
+              <XMarkIcon className='h-6 w-6' />
+            </FooterListItem>
+            {/* {mode === 'text' ? (
+              <FooterListItem onClick={() => setMode('list')}>
+                <ListBulletIcon className='h-6 w-6' />
+              </FooterListItem>
+            ) : (
+              <FooterListItem onClick={() => setMode('text')}>
+                <PencilSquareIcon className='h-6 w-6' />
+              </FooterListItem>
+            )} */}
+            {!readOnly && (
+              <FooterListItem
+                onClick={() => {
+                  // TODO: confirm delete
+                  // setIsConfirmModalOpen(true)
+
+                  deleteNote({ id: note.id })
+                  router.push('/')
+                }}
+              >
+                <TrashIcon className='h-6 w-6 text-red-600' />
+              </FooterListItem>
+            )}
+          </>
+        ) : (
           <>
             <FooterListItem
               onClick={() => {
@@ -268,10 +310,10 @@ export default function NoteComponent({ note }: { note: Note }) {
             >
               <Bars2Icon className='h-6 w-6' />
             </FooterListItem>
-            {/* <FooterListItem onClick={() => setFooterType('tools')}>
+            <FooterListItem onClick={() => setFooterType('tools')}>
               <WrenchIcon className='h-6 w-6' />
             </FooterListItem>
-            <FooterListItem onClick={() => setFooterType('share')}>
+            {/* <FooterListItem onClick={() => setFooterType('share')}>
               <ShareIcon className='h-6 w-6' />
             </FooterListItem> */}
             {!readOnly && (
@@ -293,7 +335,7 @@ export default function NoteComponent({ note }: { note: Note }) {
               </FooterListItem>
             )}
           </>
-        }
+        )}
       </Footer>
     </>
   )

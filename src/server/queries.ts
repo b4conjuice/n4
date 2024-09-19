@@ -62,6 +62,8 @@ export async function deleteNote(id: number, currentPath = '/') {
 
   if (!user.userId) throw new Error('unauthorized')
 
+  // TODO: somehow check if note is related to an item in a different table
+
   await db
     .delete(notes)
     .where(and(eq(notes.id, id), eq(notes.author, user.userId)))

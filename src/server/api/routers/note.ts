@@ -1,8 +1,18 @@
 import { z } from 'zod'
 
 import { createTRPCRouter, publicProcedure } from '@/server/api/trpc'
+import { deleteNote } from '@/server/queries'
 
 export const noteRouter = createTRPCRouter({
+  delete: publicProcedure
+    .input(
+      z.object({
+        id: z.number(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      await deleteNote(input.id)
+    }),
   hello: publicProcedure
     .input(z.object({ text: z.string() }))
     .query(({ input }) => {
