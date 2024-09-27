@@ -10,12 +10,12 @@ import { type Note } from '@/lib/types'
 import { db } from './db'
 import { notes } from './db/schema'
 
-export async function saveNote(note: Note, currentPath = '/') {
+export async function saveNote(note: Note) {
   const user = auth()
 
   if (!user.userId) throw new Error('unauthorized')
 
-  await db
+  const newNotes = await db
     .insert(notes)
     .values({
       ...note,
@@ -29,7 +29,11 @@ export async function saveNote(note: Note, currentPath = '/') {
         body: note.body,
       },
     })
-  revalidatePath(currentPath)
+    .returning()
+  if (!newNotes || newNotes.length < 0) throw new Error('something went wrong')
+  const newNote = newNotes[0]
+  if (!newNote) throw new Error('something went wrong')
+  return newNote.id
 }
 
 export async function getNotes() {

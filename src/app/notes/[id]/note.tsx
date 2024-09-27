@@ -19,10 +19,10 @@ import { api } from '@/trpc/react'
 
 type FooterType = 'default' | 'tools' | 'share'
 
-export default function NoteComponent({ note }: { note: Note }) {
+export default function NoteComponent({ note }: { note?: Note }) {
   const router = useRouter()
-  const { text: initialText } = note
-  const [text, setText] = useState(initialText)
+  const { text: initialText } = note ?? {}
+  const [text, setText] = useState(initialText ?? '')
   const [footerType, setFooterType] = useState<FooterType>('default')
   const [isFullScreen, setIsFullScreen] = useState(false)
   const [currentSelectionStart, setCurrentSelectionStart] = useState(0)
@@ -289,12 +289,18 @@ export default function NoteComponent({ note }: { note: Note }) {
             )} */}
             {!readOnly && (
               <FooterListItem
+                disabled={!note}
                 onClick={() => {
                   // TODO: confirm delete
                   // setIsConfirmModalOpen(true)
 
-                  deleteNote({ id: note.id })
-                  router.push('/')
+                  if (note) {
+                    const id = note.id ?? undefined
+                    if (id) {
+                      deleteNote({ id })
+                    }
+                    router.push('/')
+                  }
                 }}
               >
                 <TrashIcon className='h-6 w-6 text-red-600' />
@@ -306,6 +312,7 @@ export default function NoteComponent({ note }: { note: Note }) {
             <FooterListItem
               onClick={() => {
                 // TODO: open sidebar
+                router.push('/notes')
               }}
             >
               <Bars2Icon className='h-6 w-6' />
@@ -319,15 +326,26 @@ export default function NoteComponent({ note }: { note: Note }) {
             {!readOnly && (
               <FooterListItem
                 onClick={async () => {
-                  const [title, ...body] = text.split('\n\n')
-                  const newNote = {
-                    ...note,
-                    id: note.id,
-                    text,
-                    title: title ?? '',
-                    body: body.join('\n\n'),
+                  if (note) {
+                    const [title, ...body] = text.split('\n\n')
+                    const newNote = {
+                      ...note,
+                      id: note.id,
+                      text,
+                      title: title ?? '',
+                      body: body.join('\n\n'),
+                    }
+                    await saveNote(newNote)
+                  } else {
+                    const [title, ...body] = text.split('\n\n')
+                    const newNote = {
+                      text,
+                      title: title ?? '',
+                      body: body.join('\n\n'),
+                    }
+                    const id = await saveNote(newNote)
+                    router.push(`/notes/${id}`)
                   }
-                  await saveNote(newNote)
                 }}
                 disabled={!canSave}
               >
