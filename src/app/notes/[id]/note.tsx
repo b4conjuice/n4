@@ -14,8 +14,7 @@ import useLocalStorage from '@/lib/useLocalStorage'
 import { type Note } from '@/lib/types'
 import { Footer, Main } from '@/components/ui'
 import { FooterListItem } from '@/components/ui/footer'
-import { saveNote } from '@/server/queries'
-import { api } from '@/trpc/react'
+import { deleteNote, saveNote } from '@/server/queries'
 
 type FooterType = 'default' | 'tools' | 'share'
 
@@ -28,8 +27,6 @@ export default function NoteComponent({ note }: { note?: Note }) {
   const [currentSelectionStart, setCurrentSelectionStart] = useState(0)
   const [currentSelectionEnd, setCurrentSelectionEnd] = useState(0)
   const [commandKey, setCommandKey] = useLocalStorage('n4-commandKey', '!')
-
-  const { mutate: deleteNote } = api.note.delete.useMutation()
 
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
   useEffect(() => {
@@ -290,14 +287,14 @@ export default function NoteComponent({ note }: { note?: Note }) {
             {!readOnly && (
               <FooterListItem
                 disabled={!note}
-                onClick={() => {
+                onClick={async () => {
                   // TODO: confirm delete
                   // setIsConfirmModalOpen(true)
 
                   if (note) {
                     const id = note.id ?? undefined
                     if (id) {
-                      deleteNote({ id })
+                      await deleteNote(id)
                     }
                     router.push('/')
                   }

@@ -11,7 +11,7 @@ export const noteRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input }) => {
-      await deleteNote(input.id)
+      await deleteNote(input.id, '/notes')
     }),
   hello: publicProcedure
     .input(z.object({ text: z.string() }))
