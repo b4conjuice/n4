@@ -30,9 +30,14 @@ export async function saveNote(note: Note) {
       },
     })
     .returning()
-  if (!newNotes || newNotes.length < 0) throw new Error('something went wrong')
+  if (!newNotes || newNotes.length < 0) {
+    throw new Error('something went wrong')
+  }
   const newNote = newNotes[0]
-  if (!newNote) throw new Error('something went wrong')
+  if (!newNote) {
+    throw new Error('something went wrong')
+  }
+  revalidatePath(`/notes/${newNote.id}`)
   return newNote.id
 }
 
