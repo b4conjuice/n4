@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import {
   ArrowDownOnSquareIcon,
   Bars2Icon,
@@ -12,7 +13,7 @@ import {
 
 import useLocalStorage from '@/lib/useLocalStorage'
 import { type Note } from '@/lib/types'
-import { Footer, Main } from '@/components/ui'
+import { Button, Footer, Main, Modal } from '@/components/ui'
 import { FooterListItem } from '@/components/ui/footer'
 import { deleteNote, saveNote } from '@/server/queries'
 
@@ -27,6 +28,8 @@ export default function NoteComponent({ note }: { note?: Note }) {
   const [currentSelectionStart, setCurrentSelectionStart] = useState(0)
   const [currentSelectionEnd, setCurrentSelectionEnd] = useState(0)
   const [commandKey, setCommandKey] = useLocalStorage('n4-commandKey', '!')
+  const [isDiscardChangesModalOpen, setIsDiscardChangesModalOpen] =
+    useState(false)
 
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
   useEffect(() => {
@@ -36,7 +39,7 @@ export default function NoteComponent({ note }: { note?: Note }) {
   }, [])
 
   const readOnly = false // !user || user.username !== note?.author
-  const hasChanges = text !== note?.text
+  const hasChanges = text !== (note?.text ?? '')
   const canSave = !readOnly && !(!hasChanges || text === '')
   return (
     <>
@@ -306,14 +309,19 @@ export default function NoteComponent({ note }: { note?: Note }) {
           </>
         ) : (
           <>
-            <FooterListItem
-              onClick={() => {
-                // TODO: open sidebar
-                router.push('/notes')
-              }}
-            >
-              <Bars2Icon className='h-6 w-6' />
-            </FooterListItem>
+            {hasChanges ? (
+              <FooterListItem
+                onClick={() => setIsDiscardChangesModalOpen(true)}
+              >
+                <Bars2Icon className='h-6 w-6' />
+              </FooterListItem>
+            ) : (
+              <FooterListItem>
+                <Link className='flex w-full justify-center py-2' href='/notes'>
+                  <Bars2Icon className='h-6 w-6' />
+                </Link>
+              </FooterListItem>
+            )}
             <FooterListItem onClick={() => setFooterType('tools')}>
               <WrenchIcon className='h-6 w-6' />
             </FooterListItem>
@@ -352,6 +360,24 @@ export default function NoteComponent({ note }: { note?: Note }) {
           </>
         )}
       </Footer>
+      <Modal
+        isOpen={isDiscardChangesModalOpen}
+        setIsOpen={setIsDiscardChangesModalOpen}
+        title='discard changes?'
+      >
+        <div className='flex space-x-4'>
+          <Button href='/notes' internal>
+            yes
+          </Button>
+          <Button
+            onClick={() => {
+              setIsDiscardChangesModalOpen(false)
+            }}
+          >
+            no
+          </Button>
+        </div>
+      </Modal>
     </>
   )
 }
