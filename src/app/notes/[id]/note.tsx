@@ -43,11 +43,11 @@ export default function NoteComponent({ note }: { note?: Note }) {
   const canSave = !readOnly && !(!hasChanges || text === '')
   return (
     <>
-      <Main className='flex flex-col p-4'>
+      <Main className='flex flex-col'>
         <div className='flex flex-grow flex-col space-y-4'>
           <textarea
             ref={textAreaRef}
-            className='h-full w-full flex-grow bg-cobalt'
+            className='h-full w-full flex-grow border-none bg-cobalt focus:ring-0'
             value={text}
             onChange={e => {
               setText(e.target.value)
