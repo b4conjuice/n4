@@ -47,7 +47,7 @@ export default function NoteComponent({ note }: { note?: Note }) {
         <div className='flex flex-grow flex-col space-y-4'>
           <textarea
             ref={textAreaRef}
-            className='h-full w-full flex-grow border-none bg-cobalt focus:ring-0'
+            className='h-full w-full flex-grow border-none bg-cobalt caret-cb-yellow focus:ring-0'
             value={text}
             onChange={e => {
               setText(e.target.value)
