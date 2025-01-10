@@ -10,6 +10,8 @@ import {
   WrenchIcon,
   XMarkIcon,
 } from '@heroicons/react/20/solid'
+import { useDebounce } from '@uidotdev/usehooks'
+import { useAuth } from '@clerk/nextjs'
 
 import useLocalStorage from '@/lib/useLocalStorage'
 import { type Note } from '@/lib/types'
@@ -20,6 +22,7 @@ import { deleteNote, saveNote } from '@/server/queries'
 type FooterType = 'default' | 'tools' | 'share'
 
 export default function NoteComponent({ note }: { note?: Note }) {
+  const { isSignedIn } = useAuth()
   const router = useRouter()
   const { text: initialText } = note ?? {}
   const [text, setText] = useState(initialText ?? '')
@@ -41,6 +44,28 @@ export default function NoteComponent({ note }: { note?: Note }) {
   const readOnly = false // !user || user.username !== note?.author
   const hasChanges = text !== (note?.text ?? '')
   const canSave = !readOnly && !(!hasChanges || text === '')
+
+  const debouncedText = useDebounce(text, 500)
+
+  useEffect(() => {
+    async function updateNote() {
+      if (note) {
+        const [title, ...body] = text.split('\n\n')
+        const newNote = {
+          ...note,
+          id: note.id,
+          text,
+          title: title ?? '',
+          body: body.join('\n\n'),
+        }
+
+        await saveNote(newNote)
+      }
+    }
+    if (isSignedIn && canSave) {
+      void updateNote()
+    }
+  }, [debouncedText])
   return (
     <>
       <Main className='flex flex-col'>
