@@ -1,27 +1,14 @@
-import Link from 'next/link'
 import { SignedIn, SignedOut } from '@clerk/nextjs'
 
 import TopNav from '@/app/_components/topNav'
 import { Main } from '@/components/ui'
 import { getNotes } from '@/server/queries'
+import NoteList from './note-list'
 
 async function Notes() {
   const notes = await getNotes()
   if (notes.length === 0) return <p>no notes</p>
-  return (
-    <ul className='divide-y divide-cb-dusty-blue'>
-      {notes.map(note => (
-        <li key={note.id} className='flex py-4 first:pt-0 last:pb-0'>
-          <Link
-            href={`/notes/${note.id}`}
-            className='grow text-cb-pink hover:text-cb-pink/75'
-          >
-            {note.title}
-          </Link>
-        </li>
-      ))}
-    </ul>
-  )
+  return <NoteList notes={notes} />
 }
 
 export default function NotesPage() {
