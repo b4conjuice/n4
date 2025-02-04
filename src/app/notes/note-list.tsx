@@ -22,24 +22,10 @@ export default function NoteList({ notes }: { notes: Note[] }) {
   const searchParams = useSearchParams()
   const query = searchParams.get('q')
 
-  const { search, setSearch, results, searchRef } = useSearch({
-    initialSearch: query ? String(query) : '',
-    list: notes,
-    options: {
-      keys: ['title', 'body'],
-    },
-  })
-  useEffect(() => {
-    if (query) {
-      setSearch(String(query))
-    }
-  }, [query, setSearch])
-
   const [selectedTags, setSelectedTags] = useLocalStorage<string[]>(
     'notes-selectedTags',
     []
   )
-  const firstTagButtonRef = useRef<HTMLButtonElement | null>(null)
   const allTags = notes
     ? [
         ...new Set(
@@ -51,6 +37,27 @@ export default function NoteList({ notes }: { notes: Note[] }) {
         ),
       ]
     : []
+
+  const taggedNotes = notes?.filter(note =>
+    selectedTags?.length > 0
+      ? selectedTags.every(tag => note.tags?.includes(tag))
+      : true
+  )
+
+  const { search, setSearch, results, searchRef } = useSearch({
+    initialSearch: query ? String(query) : '',
+    list: taggedNotes || [],
+    options: {
+      keys: ['title', 'body'],
+    },
+  })
+  useEffect(() => {
+    if (query) {
+      setSearch(String(query))
+    }
+  }, [query, setSearch])
+
+  const firstTagButtonRef = useRef<HTMLButtonElement | null>(null)
   return (
     <>
       <div className='flex'>
