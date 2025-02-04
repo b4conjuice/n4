@@ -372,6 +372,7 @@ export default function NoteComponent({ note }: { note?: Note }) {
                       text,
                       title: title ?? '',
                       body: body.join('\n\n'),
+                      tags: [],
                     }
                     const id = await saveNote(newNote)
                     router.push(`/notes/${id}`)
