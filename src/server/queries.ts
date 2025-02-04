@@ -27,6 +27,7 @@ export async function saveNote(note: Note) {
         text: note.text,
         title: note.title,
         body: note.body,
+        tags: note.tags,
       },
     })
     .returning()

@@ -1,13 +1,22 @@
 'use client'
 
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import classNames from 'classnames'
+import { TagIcon } from '@heroicons/react/24/solid'
 
 import { type Note } from '@/lib/types'
 import useSearch from '@/lib/useSearch'
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { useEffect } from 'react'
+import useLocalStorage from '@/lib/useLocalStorage'
+import { Modal } from '@/components/ui'
+import { AddTag, ToggleTag } from './tags'
 
 export default function NoteList({ notes }: { notes: Note[] }) {
+  const [isSetTagsModalOpen, setIsSetTagsModalOpen] = useState(false)
+  const [isAddNewTagModalOpen, setIsAddNewTagModalOpen] = useState(false)
+  const [selectedNoteId, setSelectedNoteId] = useState<number | null>(null)
+  const selectedNote = notes.find(note => note.id === selectedNoteId)
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -25,6 +34,23 @@ export default function NoteList({ notes }: { notes: Note[] }) {
       setSearch(String(query))
     }
   }, [query, setSearch])
+
+  const [selectedTags, setSelectedTags] = useLocalStorage<string[]>(
+    'notes-selectedTags',
+    []
+  )
+  const firstTagButtonRef = useRef<HTMLButtonElement | null>(null)
+  const allTags = notes
+    ? [
+        ...new Set(
+          notes.reduce((allTagsFoo: string[], note: Note) => {
+            const { tags } = note
+            const noteTags = tags ? [...tags] : []
+            return [...allTagsFoo, ...noteTags]
+          }, [])
+        ),
+      ]
+    : []
   return (
     <>
       <div className='flex'>
@@ -43,18 +69,98 @@ export default function NoteList({ notes }: { notes: Note[] }) {
           disabled={!(notes?.length && notes?.length > 0)}
         />
       </div>
+      {allTags.length > 0 && (
+        <ul className='flex space-x-2 overflow-x-auto'>
+          {allTags.map((tag, index) => (
+            <li key={tag}>
+              <button
+                ref={index === 0 ? firstTagButtonRef : undefined}
+                className={classNames(
+                  'rounded-lg border bg-cb-blue p-2',
+                  selectedTags?.includes(tag)
+                    ? 'border-cb-pink'
+                    : 'border-cb-blue'
+                )}
+                onClick={() => {
+                  const index = selectedTags.findIndex(t => t === tag)
+                  const newSelectedTags = [...selectedTags]
+                  if (index > -1) {
+                    newSelectedTags.splice(index, 1)
+                  } else {
+                    newSelectedTags.push(tag)
+                  }
+                  setSelectedTags(newSelectedTags)
+                }}
+                // TODO: tabIndex={focusTabs ? 0 : -1}
+              >
+                {tag}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
       <ul className='divide-y divide-cb-dusty-blue'>
         {results.map(note => (
           <li key={note.id} className='flex py-4 first:pt-0 last:pb-0'>
             <Link
               href={`/notes/${note.id}`}
-              className='grow text-cb-pink hover:text-cb-pink/75'
+              className='flex grow items-center justify-between text-cb-pink hover:text-cb-pink/75'
             >
-              {note.title}
+              <div>
+                <div>{note.title}</div>
+                {note.tags && note.tags.length > 0 && (
+                  <div>{note.tags.join(' ')}</div>
+                )}
+              </div>
+              <div className='flex space-x-2'>
+                <button
+                  type='button'
+                  onClick={e => {
+                    e.preventDefault()
+                    if (note?.id) {
+                      setSelectedNoteId(note.id)
+                      setIsSetTagsModalOpen(true)
+                    }
+                  }}
+                  tabIndex={-1}
+                >
+                  <TagIcon className='h-6 w-6 text-cb-yellow' />
+                </button>
+              </div>
             </Link>
           </li>
         ))}
       </ul>
+      <Modal
+        isOpen={isSetTagsModalOpen}
+        setIsOpen={setIsSetTagsModalOpen}
+        title='edit tags'
+      >
+        {selectedNote && (
+          <ToggleTag
+            note={selectedNote}
+            allTags={allTags}
+            openAddTagModal={() => {
+              setIsSetTagsModalOpen(false)
+              setIsAddNewTagModalOpen(true)
+            }}
+          />
+        )}
+      </Modal>
+      <Modal
+        isOpen={isAddNewTagModalOpen}
+        setIsOpen={setIsAddNewTagModalOpen}
+        title='add new tag'
+      >
+        {selectedNote && (
+          <AddTag
+            note={selectedNote}
+            close={() => {
+              setIsAddNewTagModalOpen(false)
+            }}
+          />
+        )}
+      </Modal>
     </>
   )
 }
