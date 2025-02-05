@@ -3,6 +3,7 @@
 
 import { sql } from 'drizzle-orm'
 import {
+  pgTable,
   pgTableCreator,
   serial,
   text,
@@ -18,7 +19,7 @@ import {
  */
 export const createTable = pgTableCreator(name => `n4_${name}`)
 
-export const notes = createTable('note', {
+export const notes = pgTable('n4_note', {
   id: serial('id').primaryKey(),
   text: varchar('text').notNull(),
   title: varchar('title', { length: 256 }).notNull(),
