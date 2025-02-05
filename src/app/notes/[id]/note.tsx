@@ -372,6 +372,7 @@ export default function NoteComponent({ note }: { note?: Note }) {
                       text,
                       title: title ?? '',
                       body: body.join('\n\n'),
+                      list: [],
                       tags: [],
                     }
                     const id = await saveNote(newNote)
