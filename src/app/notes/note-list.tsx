@@ -119,22 +119,23 @@ export default function NoteList({ notes }: { notes: Note[] }) {
                   <div>{note.tags.join(' ')}</div>
                 )}
               </div>
-              <div className='flex space-x-2'>
-                <button
-                  type='button'
-                  onClick={e => {
-                    e.preventDefault()
-                    if (note?.id) {
-                      setSelectedNoteId(note.id)
-                      setIsSetTagsModalOpen(true)
-                    }
-                  }}
-                  tabIndex={-1}
-                >
-                  <TagIcon className='h-6 w-6 text-cb-yellow' />
-                </button>
-              </div>
             </Link>
+            <div className='flex space-x-2'>
+              <button
+                type='button'
+                onClick={e => {
+                  e.preventDefault()
+                  if (note?.id) {
+                    setSelectedNoteId(note.id)
+                    setIsSetTagsModalOpen(true)
+                  }
+                }}
+                tabIndex={-1}
+                className='text-cb-yellow hover:text-cb-yellow/75'
+              >
+                <TagIcon className='h-6 w-6' />
+              </button>
+            </div>
           </li>
         ))}
       </ul>
