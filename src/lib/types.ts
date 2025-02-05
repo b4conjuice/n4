@@ -3,5 +3,6 @@ export type Note = {
   text: string
   title: string
   body: string
+  list: string[]
   tags: string[]
 }

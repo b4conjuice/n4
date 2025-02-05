@@ -15,10 +15,14 @@ export async function saveNote(note: Note) {
 
   if (!user.userId) throw new Error('unauthorized')
 
+  const isList = note.title.startsWith('= ')
+  const list = isList ? note.body.split('\n').filter(item => item !== '') : []
+
   const newNotes = await db
     .insert(notes)
     .values({
       ...note,
+      list,
       author: user.userId,
     })
     .onConflictDoUpdate({
@@ -27,6 +31,7 @@ export async function saveNote(note: Note) {
         text: note.text,
         title: note.title,
         body: note.body,
+        list,
         tags: note.tags,
       },
     })
