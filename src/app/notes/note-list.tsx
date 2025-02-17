@@ -108,10 +108,10 @@ export default function NoteList({ notes }: { notes: Note[] }) {
       )}
       <ul className='divide-y divide-cb-dusty-blue'>
         {results.map(note => (
-          <li key={note.id} className='flex py-4 first:pt-0 last:pb-0'>
+          <li key={note.id} className='group flex space-x-2'>
             <Link
               href={`/notes/${note.id}`}
-              className='flex grow items-center justify-between text-cb-pink hover:text-cb-pink/75'
+              className='flex grow items-center justify-between py-4 text-cb-pink hover:text-cb-pink/75 group-first:pt-0'
             >
               <div>
                 <div>{note.title}</div>

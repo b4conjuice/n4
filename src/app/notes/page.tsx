@@ -15,7 +15,7 @@ export default function NotesPage() {
   return (
     <>
       <TopNav />
-      <Main className='flex flex-col px-4 pb-4'>
+      <Main className='flex flex-col px-4'>
         <div className='flex flex-grow flex-col space-y-4'>
           <SignedIn>
             <Notes />
