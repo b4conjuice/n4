@@ -1,9 +1,14 @@
+import type { Viewport } from 'next'
 import { SignedIn, SignedOut } from '@clerk/nextjs'
 
 import TopNav from '@/app/_components/topNav'
 import { Main } from '@/components/ui'
 import { getNotes } from '@/server/queries'
 import NoteList from './note-list'
+
+export const viewport: Viewport = {
+  themeColor: '#15232d',
+}
 
 async function Notes() {
   const notes = await getNotes()
