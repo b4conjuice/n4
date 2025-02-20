@@ -25,7 +25,7 @@ export default function useLocalStorage<T>(key: string, initialValue: T) {
   }, [])
 
   useEffect(() => {
-    if (storedValue) {
+    if (storedValue !== undefined) {
       setValue(storedValue)
     }
   }, [storedValue])

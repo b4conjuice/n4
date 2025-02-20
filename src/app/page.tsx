@@ -1,23 +1,25 @@
-import { SignedIn, SignedOut } from '@clerk/nextjs'
+import { SignedOut } from '@clerk/nextjs'
 
 import TopNav from '@/app/_components/topNav'
 import { Main } from '@/components/ui'
-import Note from './notes/[id]/note'
+import HomePageNote from './_components/homepage-note'
 
 export default function Home() {
   return (
     <>
       <SignedOut>
         <TopNav />
-        <Main className='flex flex-col px-4 pb-4'>
-          <div className='flex flex-grow flex-col space-y-4'>
-            <p>sign in to create notes</p>
-          </div>
-        </Main>
       </SignedOut>
-      <SignedIn>
-        <Note />
-      </SignedIn>
+      <Main className='flex flex-col'>
+        <div className='flex flex-grow flex-col space-y-4'>
+          <SignedOut>
+            <p className='px-4'>sign in to save notes</p>
+          </SignedOut>
+          <div className='flex flex-grow flex-col'>
+            <HomePageNote />
+          </div>
+        </div>
+      </Main>
     </>
   )
 }
