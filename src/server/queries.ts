@@ -60,13 +60,8 @@ export async function getNotes() {
 }
 
 export async function getNote(id: number) {
-  const user = auth()
-
-  if (!user.userId) throw new Error('unauthorized')
-
   const note = await db.query.notes.findFirst({
-    where: (model, { eq }) =>
-      and(eq(model.id, id), eq(model.author, user.userId)),
+    where: (model, { eq }) => and(eq(model.id, id)),
   })
 
   return note
