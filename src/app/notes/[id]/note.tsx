@@ -23,6 +23,7 @@ import { Button, Main, Modal } from '@/components/ui'
 import { deleteNote, saveNote } from '@/server/queries'
 import copyToClipboard from '@/lib/copyToClipboard'
 import List from './list'
+import CommandPalette from '@/components/command-palette'
 
 const TABS = ['default', 'settings', 'list', 'tools', 'share'] as const
 type Tab = (typeof TABS)[number]
@@ -531,6 +532,52 @@ export default function NoteComponent({ note }: { note: Note }) {
           </Button>
         </div>
       </Modal>
+      <CommandPalette
+        commands={[
+          {
+            id: 'switch-tab-default',
+            title: 'switch tab to default',
+            action: () => {
+              setTab('default')
+            },
+          },
+          {
+            id: 'switch-tab-settings',
+            title: 'switch tab to settings',
+            action: () => {
+              setTab('settings')
+            },
+          },
+          {
+            id: 'switch-tab-list',
+            title: 'switch tab to list',
+            action: () => {
+              setTab('list')
+            },
+          },
+          {
+            id: 'switch-tab-tools',
+            title: 'switch tab to tools',
+            action: () => {
+              setTab('tools')
+            },
+          },
+          {
+            id: 'switch-tab-share',
+            title: 'switch tab to share',
+            action: () => {
+              setTab('share')
+            },
+          },
+          {
+            id: 'go-notes',
+            title: 'go to notes',
+            action: () => {
+              router.push('/notes')
+            },
+          },
+        ]}
+      />
     </>
   )
 }

@@ -11,6 +11,7 @@ import useSearch from '@/lib/useSearch'
 import useLocalStorage from '@/lib/useLocalStorage'
 import { Modal } from '@/components/ui'
 import { AddTag, ToggleTag } from './tags'
+import CommandPalette from '@/components/command-palette'
 
 export default function NoteList({ notes }: { notes: Note[] }) {
   const [isSetTagsModalOpen, setIsSetTagsModalOpen] = useState(false)
@@ -169,6 +170,24 @@ export default function NoteList({ notes }: { notes: Note[] }) {
           />
         )}
       </Modal>
+      <CommandPalette
+        commands={[
+          {
+            id: 'go-home',
+            title: 'go home',
+            action: () => {
+              router.push('/')
+            },
+          },
+          ...notes.map(note => ({
+            id: `go-note-${note.id}`,
+            title: `go to note: ${note.title}`,
+            action: () => {
+              router.push(`/notes/${note.id}`)
+            },
+          })),
+        ]}
+      />
     </>
   )
 }

@@ -7,6 +7,7 @@ import { SignedIn } from '@clerk/nextjs'
 
 import useLocalStorage from '@/lib/useLocalStorage'
 import { saveNote } from '@/server/queries'
+import CommandPalette from '@/components/command-palette'
 
 export default function HomePageNote() {
   const router = useRouter()
@@ -56,6 +57,17 @@ export default function HomePageNote() {
             </button>
           </div>
         </footer>
+        <CommandPalette
+          commands={[
+            {
+              id: 'go-notes',
+              title: 'go notes',
+              action: () => {
+                router.push('/notes')
+              },
+            },
+          ]}
+        />
       </SignedIn>
     </>
   )
