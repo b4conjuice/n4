@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import {
   ArrowDownOnSquareIcon,
@@ -20,14 +20,24 @@ import useLocalStorage from '@/lib/useLocalStorage'
 import { type Note } from '@/lib/types'
 import { Button, Main, Modal } from '@/components/ui'
 import { deleteNote, saveNote } from '@/server/queries'
+import copyToClipboard from '@/lib/copyToClipboard'
 
 const TABS = ['default', 'settings', 'list', 'tools', 'share'] as const
 type Tab = (typeof TABS)[number]
 
-export default function NoteComponent({ note }: { note?: Note }) {
+export default function NoteComponent({ note }: { note: Note }) {
   const { isSignedIn } = useAuth()
-  const [tab, setTab] = useState<Tab | null>('default')
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const initialTab = searchParams.get('tab') as Tab
+  const [tab, setTab] = useState<Tab | null>(initialTab ?? 'default')
+  useEffect(() => {
+    if (tab !== 'default') {
+      router.push(`/notes/${note.id}?tab=${tab}`)
+    } else {
+      router.push(`/notes/${note.id}`)
+    }
+  }, [tab])
   const { text: initialText } = note ?? {}
   const [text, setText] = useState(initialText ?? '')
   const [isFullScreen, setIsFullScreen] = useState(false)
