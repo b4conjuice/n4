@@ -47,6 +47,7 @@ export default function NoteComponent({ note }: { note: Note }) {
   const [commandKey, setCommandKey] = useLocalStorage('n4-commandKey', '!')
   const [isDiscardChangesModalOpen, setIsDiscardChangesModalOpen] =
     useState(false)
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false)
 
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
   useEffect(() => {
@@ -121,17 +122,8 @@ export default function NoteComponent({ note }: { note: Note }) {
             <button
               className='flex w-full justify-center py-2 disabled:pointer-events-none disabled:opacity-25'
               disabled={!note}
-              onClick={async () => {
-                // TODO: confirm delete
-                // setIsConfirmModalOpen(true)
-
-                if (note) {
-                  const id = note.id ?? undefined
-                  if (id) {
-                    await deleteNote(id)
-                  }
-                  router.push('/')
-                }
+              onClick={() => {
+                setIsConfirmModalOpen(true)
               }}
             >
               <TrashIcon className='h-6 w-6 text-red-600' />
@@ -490,6 +482,35 @@ export default function NoteComponent({ note }: { note: Note }) {
           <Button
             onClick={() => {
               setIsDiscardChangesModalOpen(false)
+            }}
+          >
+            no
+          </Button>
+        </div>
+      </Modal>
+      <Modal
+        isOpen={isConfirmModalOpen}
+        setIsOpen={setIsConfirmModalOpen}
+        title='are you sure you want to delete?'
+      >
+        <div className='flex space-x-4'>
+          <Button
+            onClick={async () => {
+              if (note) {
+                const id = note.id ?? undefined
+                if (id) {
+                  await deleteNote(id)
+                }
+                setIsConfirmModalOpen(false)
+                router.push('/notes')
+              }
+            }}
+          >
+            yes
+          </Button>
+          <Button
+            onClick={() => {
+              setIsConfirmModalOpen(false)
             }}
           >
             no
