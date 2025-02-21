@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import type { Viewport } from 'next'
 import Link from 'next/link'
 import { SignedIn, SignedOut } from '@clerk/nextjs'
@@ -25,7 +26,9 @@ export default function NotesPage() {
       <Main className='flex flex-col px-4'>
         <div className='flex flex-grow flex-col space-y-4'>
           <SignedIn>
-            <Notes />
+            <Suspense>
+              <Notes />
+            </Suspense>
           </SignedIn>
           <SignedOut>
             <p>sign in to view your notes</p>
