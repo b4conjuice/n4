@@ -16,6 +16,7 @@
   "dependencies": {
     "@clerk/nextjs": "^5.4.1",
     "@headlessui/react": "^2.1.8",
+    "@hello-pangea/dnd": "^18.0.1",
     "@heroicons/react": "^2.1.5",
     "@t3-oss/env-nextjs": "^0.10.1",
     "@tailwindcss/forms": "^0.5.9",

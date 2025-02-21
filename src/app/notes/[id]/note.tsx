@@ -22,6 +22,7 @@ import { type Note } from '@/lib/types'
 import { Button, Main, Modal } from '@/components/ui'
 import { deleteNote, saveNote } from '@/server/queries'
 import copyToClipboard from '@/lib/copyToClipboard'
+import List from './list'
 
 const TABS = ['default', 'settings', 'list', 'tools', 'share'] as const
 type Tab = (typeof TABS)[number]
@@ -81,6 +82,9 @@ export default function NoteComponent({ note }: { note: Note }) {
       void updateNote()
     }
   }, [debouncedText])
+
+  const [title, body] = text.split('\n\n')
+  const items = body ? body.split('\n') : []
   const url = `${window.location.origin}${window.location.pathname}`
   return (
     <>
@@ -115,6 +119,16 @@ export default function NoteComponent({ note }: { note: Note }) {
               <span>{url}</span>
               <DocumentDuplicateIcon className='h-6 w-6' />
             </button>
+          </>
+        ) : tab === 'list' ? (
+          <>
+            <h2 className='px-2'>{title}</h2>
+            <List
+              items={items}
+              setItems={(newItems: string[]) => {
+                setText(`${title}\n\n${newItems.join('\n')}`)
+              }}
+            />
           </>
         ) : tab === 'settings' ? (
           <>
