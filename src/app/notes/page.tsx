@@ -8,6 +8,7 @@ import TopNav from '@/app/_components/topNav'
 import { Main } from '@/components/ui'
 import { getNotes } from '@/server/queries'
 import NoteList from './note-list'
+import NoteListSkeleton from './note-list-skeleton'
 
 export const viewport: Viewport = {
   themeColor: '#15232d',
@@ -26,7 +27,7 @@ export default function NotesPage() {
       <Main className='flex flex-col px-4'>
         <div className='flex flex-grow flex-col space-y-4'>
           <SignedIn>
-            <Suspense>
+            <Suspense fallback={<NoteListSkeleton />}>
               <Notes />
             </Suspense>
           </SignedIn>
