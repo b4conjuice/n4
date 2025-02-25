@@ -155,6 +155,29 @@ export default function NoteComponent({
           <>
             <h2 className='px-2'>tools</h2>
             <Tags note={note} allTags={allTags ?? []} />
+            <Button
+              onClick={() => {
+                const INSERT = '\t'
+                const newText =
+                  text.substring(0, currentSelectionStart) +
+                  INSERT +
+                  text.substring(currentSelectionEnd, text.length)
+
+                if (textAreaRef.current) {
+                  textAreaRef.current.focus()
+                  textAreaRef.current.value = newText
+
+                  textAreaRef.current.setSelectionRange(
+                    currentSelectionStart + 1,
+                    currentSelectionStart + 1
+                  )
+                }
+
+                setText(newText)
+              }}
+            >
+              insert tab
+            </Button>
           </>
         ) : (
           <textarea
