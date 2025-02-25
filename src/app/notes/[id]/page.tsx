@@ -4,7 +4,7 @@ import { auth } from '@clerk/nextjs/server'
 
 import { Main } from '@/components/ui'
 import TopNav from '@/app/_components/topNav'
-import { getNote } from '@/server/queries'
+import { getNote, getTags } from '@/server/queries'
 import Note from './note'
 
 export default async function NotePage({ params }: { params: { id: string } }) {
@@ -60,5 +60,6 @@ export default async function NotePage({ params }: { params: { id: string } }) {
       </>
     )
   }
-  return <Note note={note} />
+  const allTags = await getTags()
+  return <Note note={note} allTags={allTags} />
 }

@@ -24,11 +24,18 @@ import { deleteNote, saveNote } from '@/server/queries'
 import copyToClipboard from '@/lib/copyToClipboard'
 import List from './list'
 import CommandPalette from '@/components/command-palette'
+import Tags from './tags'
 
 const TABS = ['default', 'settings', 'list', 'tools', 'share'] as const
 type Tab = (typeof TABS)[number]
 
-export default function NoteComponent({ note }: { note: Note }) {
+export default function NoteComponent({
+  note,
+  allTags,
+}: {
+  note: Note
+  allTags?: string[]
+}) {
   const { isSignedIn } = useAuth()
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -146,7 +153,8 @@ export default function NoteComponent({ note }: { note: Note }) {
           </>
         ) : tab === 'tools' ? (
           <>
-            <p>tools</p>
+            <h2 className='px-2'>tools</h2>
+            <Tags note={note} allTags={allTags ?? []} />
           </>
         ) : (
           <textarea

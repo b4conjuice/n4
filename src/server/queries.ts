@@ -79,3 +79,25 @@ export async function deleteNote(id: number, currentPath = '/') {
     .where(and(eq(notes.id, id), eq(notes.author, user.userId)))
   revalidatePath(currentPath)
 }
+
+export async function getTags() {
+  const user = auth()
+
+  if (!user.userId) throw new Error('unauthorized')
+
+  const notes = await getNotes()
+
+  const allTags = notes
+    ? [
+        ...new Set(
+          notes.reduce((allTagsFoo: string[], note: Note) => {
+            const { tags } = note
+            const noteTags = tags ? [...tags] : []
+            return [...allTagsFoo, ...noteTags]
+          }, [])
+        ),
+      ]
+    : []
+
+  return allTags
+}
