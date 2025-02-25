@@ -11,7 +11,7 @@ import { db } from './db'
 import { notes } from './db/schema'
 
 export async function saveNote(note: Note) {
-  const user = auth()
+  const user = await auth()
 
   if (!user.userId) throw new Error('unauthorized')
 
@@ -48,7 +48,7 @@ export async function saveNote(note: Note) {
 }
 
 export async function getNotes() {
-  const user = auth()
+  const user = await auth()
 
   if (!user.userId) throw new Error('unauthorized')
 
@@ -68,7 +68,7 @@ export async function getNote(id: number) {
 }
 
 export async function deleteNote(id: number, currentPath = '/') {
-  const user = auth()
+  const user = await auth()
 
   if (!user.userId) throw new Error('unauthorized')
 
@@ -81,7 +81,7 @@ export async function deleteNote(id: number, currentPath = '/') {
 }
 
 export async function getTags() {
-  const user = auth()
+  const user = await auth()
 
   if (!user.userId) throw new Error('unauthorized')
 

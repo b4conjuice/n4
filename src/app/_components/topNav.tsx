@@ -5,8 +5,9 @@ import { auth, clerkClient } from '@clerk/nextjs/server'
 import TopNavTitle from './topNavTitle'
 
 export default async function TopNav() {
-  const { userId }: { userId: string | null } = auth()
-  const user = userId ? await clerkClient.users.getUser(userId) : null
+  const { userId }: { userId: string | null } = await auth()
+  const client = await clerkClient()
+  const user = userId ? await client.users?.getUser(userId) : null
   const username = user?.username
   return (
     <div className='mb-4 flex w-full items-center px-4 pt-4'>

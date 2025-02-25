@@ -8,7 +8,7 @@ import { getNote, getTags } from '@/server/queries'
 import Note from './note'
 
 export default async function NotePage({ params }: { params: { id: string } }) {
-  const user = auth()
+  const user = await auth()
   const note = await getNote(Number(params.id))
   if (!note) {
     return (
