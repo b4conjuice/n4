@@ -186,6 +186,20 @@ export default function NoteList({ notes }: { notes: Note[] }) {
               router.push(`/notes/${note.id}`)
             },
           })),
+          ...allTags.map(tag => ({
+            id: `toggle-tag-${tag}`,
+            title: `toggle tag: ${tag}`,
+            action: () => {
+              const index = selectedTags.findIndex(t => t === tag)
+              const newSelectedTags = [...selectedTags]
+              if (index > -1) {
+                newSelectedTags.splice(index, 1)
+              } else {
+                newSelectedTags.push(tag)
+              }
+              setSelectedTags(newSelectedTags)
+            },
+          })),
         ]}
       />
     </>
