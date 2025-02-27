@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 import { createTRPCRouter, publicProcedure } from '@/server/api/trpc'
-import { deleteNote } from '@/server/queries'
+import { deleteNote } from '@/server/actions'
 
 export const noteRouter = createTRPCRouter({
   delete: publicProcedure

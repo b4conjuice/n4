@@ -6,7 +6,7 @@ import { PencilSquareIcon } from '@heroicons/react/20/solid'
 
 import TopNav from '@/app/_components/topNav'
 import { Main } from '@/components/ui'
-import { getNotes } from '@/server/queries'
+import { getNotes } from '@/server/actions'
 import NoteList from './note-list'
 import NoteListSkeleton from './note-list-skeleton'
 

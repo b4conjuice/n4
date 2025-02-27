@@ -19,7 +19,7 @@ import { useAuth } from '@clerk/nextjs'
 
 import { type Note } from '@/lib/types'
 import { Button, Main, Modal } from '@/components/ui'
-import { deleteNote, saveNote } from '@/server/queries'
+import { deleteNote, saveNote } from '@/server/actions'
 import copyToClipboard from '@/lib/copyToClipboard'
 import List from './list'
 import CommandPalette from '@/components/command-palette'

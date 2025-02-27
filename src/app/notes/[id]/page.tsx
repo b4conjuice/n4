@@ -4,7 +4,7 @@ import { auth } from '@clerk/nextjs/server'
 
 import { Main } from '@/components/ui'
 import TopNav from '@/app/_components/topNav'
-import { getNote, getTags } from '@/server/queries'
+import { getNote, getTags } from '@/server/actions'
 import Note from './note'
 
 export default async function NotePage({ params }: { params: { id: string } }) {

@@ -6,7 +6,7 @@ import { ArrowDownOnSquareIcon, Bars2Icon } from '@heroicons/react/24/solid'
 import { SignedIn } from '@clerk/nextjs'
 
 import useLocalStorage from '@/lib/useLocalStorage'
-import { saveNote } from '@/server/queries'
+import { saveNote } from '@/server/actions'
 import CommandPalette from '@/components/command-palette'
 
 export default function HomePageNote() {

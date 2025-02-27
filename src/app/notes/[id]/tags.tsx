@@ -4,7 +4,7 @@ import { useForm, type SubmitHandler } from 'react-hook-form'
 
 import { Button } from '@/components/ui'
 import { type Note } from '@/lib/types'
-import { saveNote } from '@/server/queries'
+import { saveNote } from '@/server/actions'
 
 type Inputs = {
   tag: string

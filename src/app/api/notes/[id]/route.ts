@@ -1,6 +1,6 @@
 import { type NextRequest } from 'next/server'
 
-import { getNote } from '@/server/queries'
+import { getNote } from '@/server/actions'
 
 export async function GET(
   request: NextRequest,
