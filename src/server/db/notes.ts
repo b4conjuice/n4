@@ -4,23 +4,46 @@ import 'server-only'
 
 import { revalidatePath } from 'next/cache'
 import { auth } from '@clerk/nextjs/server'
-import { and } from 'drizzle-orm'
+import { and, eq } from 'drizzle-orm'
 
 import { type Note } from '@/lib/types'
-import { db } from './db'
-import {
-  saveNote as coreSaveNote,
-  deleteNote as coreDeleteNote,
-} from './db/notes'
+import { db } from '@/server/db'
+import { notes } from '@/server/db/schema'
 
 export async function saveNote(note: Note) {
   const user = await auth()
 
   if (!user.userId) throw new Error('unauthorized')
 
-  const noteId = await coreSaveNote(note)
-  revalidatePath(`/notes/${noteId}`)
-  return noteId
+  const isList = note.title.startsWith('= ')
+  const list = isList ? note.body.split('\n').filter(item => item !== '') : []
+
+  const newNotes = await db
+    .insert(notes)
+    .values({
+      ...note,
+      list,
+      author: user.userId,
+    })
+    .onConflictDoUpdate({
+      target: notes.id,
+      set: {
+        text: note.text,
+        title: note.title,
+        body: note.body,
+        list,
+        tags: note.tags,
+      },
+    })
+    .returning()
+  if (!newNotes || newNotes.length < 0) {
+    throw new Error('something went wrong')
+  }
+  const newNote = newNotes[0]
+  if (!newNote) {
+    throw new Error('something went wrong')
+  }
+  return newNote.id
 }
 
 export async function getNotes() {
@@ -43,14 +66,16 @@ export async function getNote(id: number) {
   return note
 }
 
-export async function deleteNote(id: number, currentPath = '/') {
+export async function deleteNote(id: number) {
   const user = await auth()
 
   if (!user.userId) throw new Error('unauthorized')
 
   // TODO: somehow check if note is related to an item in a different table
-  await coreDeleteNote(id)
-  revalidatePath(currentPath)
+
+  await db
+    .delete(notes)
+    .where(and(eq(notes.id, id), eq(notes.author, user.userId)))
 }
 
 export async function getTags() {
