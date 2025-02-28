@@ -2,7 +2,6 @@
 
 import 'server-only'
 
-import { revalidatePath } from 'next/cache'
 import { auth } from '@clerk/nextjs/server'
 import { and, eq } from 'drizzle-orm'
 
