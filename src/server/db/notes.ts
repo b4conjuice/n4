@@ -4,10 +4,16 @@ import 'server-only'
 
 import { auth } from '@clerk/nextjs/server'
 import { and, eq } from 'drizzle-orm'
+import { marked } from 'marked'
+import { JSDOM } from 'jsdom'
+import DOMPurify from 'dompurify'
 
 import { type Note } from '@/lib/types'
 import { db } from '@/server/db'
 import { notes } from '@/server/db/schema'
+
+const window = new JSDOM('').window
+const purify = DOMPurify(window)
 
 export async function saveNote(note: Note) {
   const user = await auth()
@@ -17,12 +23,18 @@ export async function saveNote(note: Note) {
   const isList = note.title.startsWith('= ')
   const list = isList ? note.body.split('\n').filter(item => item !== '') : []
 
+  const isMarkdown = note.title.startsWith('# ')
+  const markdown = isMarkdown
+    ? purify.sanitize(await marked.parse(note.text))
+    : ''
+
   const newNotes = await db
     .insert(notes)
     .values({
       ...note,
       list,
       author: user.userId,
+      markdown,
     })
     .onConflictDoUpdate({
       target: notes.id,
@@ -32,6 +44,7 @@ export async function saveNote(note: Note) {
         body: note.body,
         list,
         tags: note.tags,
+        markdown,
       },
     })
     .returning()
