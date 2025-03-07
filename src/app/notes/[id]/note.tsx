@@ -87,7 +87,7 @@ export default function NoteComponent({
     if (isSignedIn && canSave) {
       void updateNote()
     }
-  }, [debouncedText, canSave, isSignedIn, note, text])
+  }, [debouncedText])
 
   const [title, body] = text.split('\n\n')
   const items = body ? body.split('\n') : []
