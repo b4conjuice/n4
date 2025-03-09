@@ -26,8 +26,8 @@ export default function HomePageNote() {
         }}
       />
       <SignedIn>
-        <footer className='sticky bottom-0 flex items-center justify-between bg-cb-dusty-blue px-2 pb-4 pt-2'>
-          <div className='flex space-x-4'>
+        <footer className='sticky bottom-0 flex items-center justify-between bg-cb-dusty-blue px-2 pb-6 pt-2'>
+          <div className='flex space-x-6'>
             <Link
               className='text-cb-yellow hover:text-cb-yellow/75 disabled:pointer-events-none disabled:opacity-25'
               href='/notes'
@@ -35,7 +35,7 @@ export default function HomePageNote() {
               <Bars2Icon className='h-6 w-6' />
             </Link>
           </div>
-          <div className='flex space-x-4'>
+          <div className='flex space-x-6'>
             <button
               className='text-cb-yellow hover:text-cb-yellow/75 disabled:pointer-events-none disabled:opacity-25'
               onClick={async () => {

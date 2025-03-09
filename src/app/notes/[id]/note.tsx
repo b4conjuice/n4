@@ -192,8 +192,8 @@ export default function NoteComponent({
           />
         )}
       </Main>
-      <footer className='sticky bottom-0 flex items-center justify-between bg-cb-dusty-blue px-2 pb-4 pt-2'>
-        <div className='flex space-x-4'>
+      <footer className='sticky bottom-0 flex items-center justify-between bg-cb-dusty-blue px-2 pb-6 pt-2'>
+        <div className='flex space-x-6'>
           {hasChanges ? (
             <button
               className='text-cb-yellow hover:text-cb-yellow/75 disabled:pointer-events-none disabled:opacity-25'
@@ -212,7 +212,7 @@ export default function NoteComponent({
             </Link>
           )}
         </div>
-        <div className='flex space-x-4'>
+        <div className='flex space-x-6'>
           {note ? (
             <>
               <button
