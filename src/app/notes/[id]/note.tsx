@@ -14,13 +14,12 @@ import {
   TrashIcon,
   WrenchIcon,
 } from '@heroicons/react/20/solid'
-import { useDebounce } from '@uidotdev/usehooks'
+import { useCopyToClipboard, useDebounce } from '@uidotdev/usehooks'
 import { useAuth } from '@clerk/nextjs'
 
 import { type Note } from '@/lib/types'
 import { Button, Main, Modal } from '@/components/ui'
 import { deleteNote, saveNote } from '@/server/actions'
-import copyToClipboard from '@/lib/copyToClipboard'
 import List from './list'
 import CommandPalette from '@/components/command-palette'
 import Tags from './tags'
@@ -36,6 +35,7 @@ export default function NoteComponent({
   note: Note
   allTags?: string[]
 }) {
+  const [copiedText, copyToClipboard] = useCopyToClipboard()
   const { isSignedIn } = useAuth()
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -103,7 +103,7 @@ export default function NoteComponent({
                   className='flex w-full justify-center text-cb-yellow hover:text-cb-yellow/75 disabled:pointer-events-none disabled:opacity-25'
                   type='submit'
                   onClick={() => {
-                    copyToClipboard(text)
+                    void copyToClipboard(text)
                   }}
                 >
                   <DocumentDuplicateIcon className='h-6 w-6' />
@@ -119,7 +119,7 @@ export default function NoteComponent({
             <button
               className='flex w-full items-center justify-between border-cobalt bg-cobalt px-2 py-3 text-left text-cb-yellow hover:cursor-pointer hover:text-cb-yellow/75'
               onClick={() => {
-                copyToClipboard(url)
+                void copyToClipboard(url)
               }}
             >
               <span>{url}</span>
