@@ -39,13 +39,14 @@ export default function NoteComponent({
   const { isSignedIn } = useAuth()
   const router = useRouter()
   const searchParams = useSearchParams()
+  const query = searchParams.get('q')
   const initialTab = searchParams.get('tab') as Tab
   const [tab, setTab] = useState<Tab | null>(initialTab ?? 'default')
   useEffect(() => {
     if (tab !== 'default') {
       router.push(`/notes/${note.id}?tab=${tab}`)
     } else {
-      router.push(`/notes/${note.id}`)
+      router.push(`/notes/${note.id}${query ? `?q=${query}` : ''}`)
     }
   }, [tab, note.id, router])
   const { text: initialText } = note ?? {}
@@ -206,7 +207,7 @@ export default function NoteComponent({
           ) : (
             <Link
               className='text-cb-yellow hover:text-cb-yellow/75 disabled:pointer-events-none disabled:opacity-25'
-              href='/notes'
+              href={`/notes${query ? `?q=${query}` : ''}`}
             >
               <Bars2Icon className='h-6 w-6' />
             </Link>

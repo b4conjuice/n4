@@ -111,7 +111,7 @@ export default function NoteList({ notes }: { notes: Note[] }) {
         {results.map(note => (
           <li key={note.id} className='group flex space-x-2'>
             <Link
-              href={`/notes/${note.id}`}
+              href={`/notes/${note.id}${query ? `?q=${query}` : ''}`}
               className='flex grow items-center justify-between py-4 text-cb-pink hover:text-cb-pink/75 group-first:pt-0'
             >
               <div>
